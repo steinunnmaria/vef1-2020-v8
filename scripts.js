@@ -14,15 +14,36 @@
  * @returns {string} Upprunalegi strengurinn hliðraður um n til hægri
  */
 function encode(str, n, alphabet = '') {
-  // dæmi sem notar for lykkju
-  const upper = str.toLocaleUpperCase();
-  const m = parseInt(n, 10);
+  const m = n % 32;
+  const upperCaseStr = str.toLocaleUpperCase();
+  let newLetters = alphabet.split('');
+  let newStr1 = str.split('');
+  let newStr = '';
 
-  let result = '';
-  for (let i = 0; i < str.length; i++) {
-    result += alphabet[(alphabet.indexOf(upper[i]) + m) % alphabet.length];
+
+  for (let i = 0; i < upperCaseStr.length; i++) {
+    let currentLetter = upperCaseStr[i];
+    if (currentLetter === ' ') {
+      newStr += currentLetter;
+      continue;
+    }
+    let currentIndex = newLetters.indexOf(currentLetter);
+    if (currentIndex >= 0 && currentIndex < alphabet.length) {
+      let newIndex = currentIndex + m;
+      if (newIndex > (alphabet.lenght - 1)) {
+        newIndex = newIndex - alphabet.length;
+      }
+      if (newIndex < 0) {
+        newIndex = newIndex + alphabet.length;
+      }
+      if (str[i] === str[i].toLocaleLowerCase()) {
+        newStr += newLetters[newIndex].toLocaleLowerCase();
+      } else {
+        newStr += newLetters[newIndex];
+      }
+    }
   }
-  return result;
+  return newStr;
 }
 
 /**
@@ -34,20 +55,43 @@ function encode(str, n, alphabet = '') {
  * @returns {string} Upprunalegi strengurinn hliðraður um n til vinstri
  */
 function decode(str, n, alphabet = '') {
-  // dæmi sem notar „fallaforritun“
+  const m = n % 32;
+  let upperCaseStr = str.toLocaleUpperCase();
+  let newLetters = alphabet.split('');
+  str.split('');
+  let newStr = '';
 
-  return str
-    .toLocaleUpperCase()
-    .split('')
-    .map(s => alphabet.indexOf(s) - n) // hliðruð staðsetning stafs
-    .map(i => i < 0 ? alphabet.length + i : i) // ef i verður neikvætt, förum aftast í stafróf
-    .map(i => alphabet[i])
-    .join('');
+  for (let i = 0; i < upperCaseStr.length; i++) {
+    let currentLetter = upperCaseStr[i];
+    if (currentLetter === ' ') {
+      newStr += currentLetter;
+      continue;
+    }
+    let currentIndex = newLetters.indexOf(currentLetter);
+    if (currentIndex >= 0 && currentIndex < alphabet.length) {
+      let newIndex = currentIndex - m;
+      if (newIndex > (alphabet.length - 1)) {
+        newIndex = newIndex - alphabet.length - 1;
+      }
+      if (newIndex < 0) {
+        newIndex = newIndex + alphabet.length;
+      }
+      if (str[i] === str[i].toLocaleLowerCase()) {
+        newStr += newLetters[newIndex].toLocaleLowerCase();
+      } else {
+        newStr += newLetters[newIndex];
+      }
+    }
+  }
+
+
+  return newStr;
+
 }
 
 function empty(el) {
-  while(el.firstChild) {
-      el.removeChild(el.firstChild);
+  while (el.firstChild) {
+    el.removeChild(el.firstChild);
   }
 }
 
@@ -67,7 +111,7 @@ const Caesar = (() => {
 
   let result;
 
-  function updateAlphabet (e) {
+  function updateAlphabet(e) {
     alphabet = e.target.value;
     shiftElement.setAttribute("max", alphabet.length);
     writeResult();
@@ -75,29 +119,29 @@ const Caesar = (() => {
 
   //brotnar þegar lengdin á alphabet er undir 3, laga
 
-  function codeOrDecode (e) {
+  function codeOrDecode(e) {
     type = e.target.value;
     writeResult();
 
   }
 
-  function updateShift (e) {
+  function updateShift(e) {
     shift = e.target.value;
     shiftValue.textContent = shift;
     writeResult();
   }
 
-  function updateText (e) {
+  function updateText(e) {
     text = e.target.value;
     writeResult();
 
     //loopa í gegnum strenginn og taka alla stafi sem eru ekki í stafrófinu, HENDA ÞEIM ÚT
   }
 
-  function writeResult () {
+  function writeResult() {
     const p = document.createElement("p");
     let coded;
-    if (type==='encode') {
+    if (type === 'encode') {
       coded = encode(text, shift, alphabet);
       p.textContent = coded;
     } else if (type === 'decode') {
