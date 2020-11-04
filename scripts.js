@@ -16,25 +16,24 @@
 function encode(str, n, alphabet = '') {
   const m = n % 32;
   const upperCaseStr = str.toLocaleUpperCase();
-  let newLetters = alphabet.split('');
-  let newStr1 = str.split('');
+  const newLetters = alphabet.split('');
+  str.split('');
   let newStr = '';
 
-
-  for (let i = 0; i < upperCaseStr.length; i++) {
-    let currentLetter = upperCaseStr[i];
+  for (let i = 0; i < upperCaseStr.length; i += 1) {
+    const currentLetter = upperCaseStr[i];
     if (currentLetter === ' ') {
       newStr += currentLetter;
       continue;
     }
-    let currentIndex = newLetters.indexOf(currentLetter);
+    const currentIndex = newLetters.indexOf(currentLetter);
     if (currentIndex >= 0 && currentIndex < alphabet.length) {
       let newIndex = currentIndex + m;
       if (newIndex > (alphabet.lenght - 1)) {
-        newIndex = newIndex - alphabet.length;
+        newIndex -= alphabet.length;
       }
       if (newIndex < 0) {
-        newIndex = newIndex + alphabet.length;
+        newIndex += alphabet.length;
       }
       if (str[i] === str[i].toLocaleLowerCase()) {
         newStr += newLetters[newIndex].toLocaleLowerCase();
@@ -56,25 +55,25 @@ function encode(str, n, alphabet = '') {
  */
 function decode(str, n, alphabet = '') {
   const m = n % 32;
-  let upperCaseStr = str.toLocaleUpperCase();
-  let newLetters = alphabet.split('');
+  const upperCaseStr = str.toLocaleUpperCase();
+  const newLetters = alphabet.split('');
   str.split('');
   let newStr = '';
 
-  for (let i = 0; i < upperCaseStr.length; i++) {
-    let currentLetter = upperCaseStr[i];
+  for (let i = 0; i < upperCaseStr.length; i += 1) {
+    const currentLetter = upperCaseStr[i];
     if (currentLetter === ' ') {
       newStr += currentLetter;
       continue;
     }
-    let currentIndex = newLetters.indexOf(currentLetter);
+    const currentIndex = newLetters.indexOf(currentLetter);
     if (currentIndex >= 0 && currentIndex < alphabet.length) {
       let newIndex = currentIndex - m;
       if (newIndex > (alphabet.length - 1)) {
         newIndex = newIndex - alphabet.length - 1;
       }
       if (newIndex < 0) {
-        newIndex = newIndex + alphabet.length;
+        newIndex += alphabet.length;
       }
       if (str[i] === str[i].toLocaleLowerCase()) {
         newStr += newLetters[newIndex].toLocaleLowerCase();
@@ -84,9 +83,7 @@ function decode(str, n, alphabet = '') {
     }
   }
 
-
   return newStr;
-
 }
 
 function empty(el) {
@@ -111,18 +108,32 @@ const Caesar = (() => {
 
   let result;
 
+  function writeResult() {
+    const p = document.createElement('p');
+    let coded;
+    if (type === 'encode') {
+      coded = encode(text, shift, alphabet);
+      p.textContent = coded;
+    } else if (type === 'decode') {
+      coded = decode(text, shift, alphabet);
+      p.textContent = coded;
+    }
+
+    empty(result);
+    result.appendChild(p);
+  }
+
   function updateAlphabet(e) {
     alphabet = e.target.value;
-    shiftElement.setAttribute("max", alphabet.length);
+    shiftElement.setAttribute('max', alphabet.length);
     writeResult();
   }
 
-  //brotnar þegar lengdin á alphabet er undir 3, laga
+  // brotnar þegar lengdin á alphabet er undir 3, laga
 
   function codeOrDecode(e) {
     type = e.target.value;
     writeResult();
-
   }
 
   function updateShift(e) {
@@ -135,42 +146,24 @@ const Caesar = (() => {
     text = e.target.value;
     writeResult();
 
-    //loopa í gegnum strenginn og taka alla stafi sem eru ekki í stafrófinu, HENDA ÞEIM ÚT
-  }
-
-  function writeResult() {
-    const p = document.createElement("p");
-    let coded;
-    if (type === 'encode') {
-      coded = encode(text, shift, alphabet);
-      p.textContent = coded;
-    } else if (type === 'decode') {
-      coded = decode(text, shift, alphabet);
-      p.textContent = coded;
-    }
-
-
-    empty(result);
-    result.appendChild(p);
-
+    // loopa í gegnum strenginn og taka alla stafi sem eru ekki í stafrófinu, HENDA ÞEIM ÚT
   }
 
   function init(el) {
     // Setja event handlera á viðeigandi element
-    el.querySelector("#alphabet").addEventListener("input", updateAlphabet);
-    const radioButtons = el.querySelectorAll("[name=type]");
-    for (let i = 0; i < radioButtons.length; i++) {
-      radioButtons[i].addEventListener("change", codeOrDecode);
+    el.querySelector('#alphabet').addEventListener('input', updateAlphabet);
+    const radioButtons = el.querySelectorAll('[name=type]');
+    for (let i = 0; i < radioButtons.length; i += 1) {
+      radioButtons[i].addEventListener('change', codeOrDecode);
     }
-    console.log(radioButtons);
-    el.querySelector("#shift").addEventListener("input", updateShift);
-    shiftValue = el.querySelector(".shiftValue");
-    shiftElement = el.querySelector("#shift");
-    el.querySelector("#input").addEventListener("input", updateText);
-    result = el.querySelector(".result");
+    el.querySelector('#shift').addEventListener('input', updateShift);
+    shiftValue = el.querySelector('.shiftValue');
+    shiftElement = el.querySelector('#shift');
+    el.querySelector('#input').addEventListener('input', updateText);
+    result = el.querySelector('.result');
   }
 
-  //append til að update-a
+  // append til að update-a
 
   return {
     init,
